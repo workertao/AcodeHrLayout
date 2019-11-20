@@ -60,16 +60,28 @@ public class HrLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (getLayoutParams().height == realHeight) {
+            return;
+        }
         int width = MeasureSpec.getSize(widthMeasureSpec);
         //计算高度
         int height = MeasureSpec.getSize(heightMeasureSpec);
+//        Log.d(TAG, "真实高度：" + Utils.getRealDisplay(getContext()).y + "    高度：" + Utils.getDisplay(getContext()).heightPixels);
         totalOffsetY = height - defaultHeight;
         setY(totalOffsetY);
         //设置view收缩状态下距离顶部的间距
         defaultMarginTop = totalOffsetY;
         //设置view拉伸状态下距离顶部的间距
         realMarginTop = height - realHeight;
+        getLayoutParams().height = (int) realHeight;
+        setLayoutParams(getLayoutParams());
         Log.d(TAG, "测量高度：" + height + "   defaultHeight：" + defaultHeight + "   realHeight：" + realHeight);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "高度：" + h);
     }
 
     //设置默认露出的高度
@@ -88,7 +100,7 @@ public class HrLayout extends LinearLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "子view是否到达顶点");
+                Log.d(TAG, "子view是否到达顶点" + canChildScrollUp());
                 currY = ev.getRawY();
                 startY = currY;
                 Log.d(TAG, "totalOffsetY:" + totalOffsetY + "    realMarginTop:" + realMarginTop);
@@ -124,6 +136,10 @@ public class HrLayout extends LinearLayout {
 
             case MotionEvent.ACTION_UP:
                 Log.d(TAG, "onInterceptTouchEvent-ACTION_UP:");
+                //如果UP的Y跟currentY一样  则分发到下级，说明是点击
+                if (ev.getRawY() == currY) {
+                    return false;
+                }
                 break;
         }
         return true;
@@ -186,6 +202,9 @@ public class HrLayout extends LinearLayout {
                 return ViewCompat.canScrollVertically(childView, -1) || childView.getScrollY() > 0;
             }
         } else {
+//            if (childView instanceof XRecyclerView) {
+//                return !((XRecyclerView) childView).isOnTop();
+//            }
             return ViewCompat.canScrollVertically(childView, -1);
         }
     }

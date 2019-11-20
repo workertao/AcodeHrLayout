@@ -44,7 +44,8 @@ public class RecyleActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            ViewHolder viewHolder = (ViewHolder) holder;
+            viewHolder.tv11.setText("" + position);
         }
 
         @Override
@@ -57,7 +58,7 @@ public class RecyleActivity extends AppCompatActivity {
 
             public ViewHolder(@NonNull ViewGroup parent) {
                 super(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item, parent, false));
-                tv11 = findViewById(R.id.tv11);
+                tv11 = itemView.findViewById(R.id.tv11);
             }
         }
     }
