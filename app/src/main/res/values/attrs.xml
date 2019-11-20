@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HrLayout">
+        <attr name="defaultHeight" format="dimension"></attr>
+        <attr name="realHeight" format="dimension"></attr>
+    </declare-styleable>
+</resources>
