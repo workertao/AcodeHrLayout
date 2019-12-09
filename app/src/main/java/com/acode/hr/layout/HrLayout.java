@@ -1,16 +1,27 @@
 package com.acode.hr.layout;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import javax.xml.transform.dom.DOMLocator;
 
 public class HrLayout extends LinearLayout {
     public static final String TAG = "HRLAYOUT";
@@ -33,6 +44,9 @@ public class HrLayout extends LinearLayout {
 
     //记录滑动的状态，上滑or下滑
     private float startY, moveState;
+
+    //标识内部是否包含滚动条,默认没有
+    private boolean noHaveScroll;
 
     public HrLayout(Context context) {
         this(context, null);
@@ -63,9 +77,11 @@ public class HrLayout extends LinearLayout {
         if (getLayoutParams().height == realHeight) {
             return;
         }
-        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int measureHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int windowsHeight = getWindowsHeight((Activity) getContext());
         //计算高度
-        int height = MeasureSpec.getSize(heightMeasureSpec);
+        int height = measureHeight > windowsHeight ? measureHeight : windowsHeight;
+//        int height = MeasureSpec.getSize(heightMeasureSpec);
 //        Log.d(TAG, "真实高度：" + Utils.getRealDisplay(getContext()).y + "    高度：" + Utils.getDisplay(getContext()).heightPixels);
         totalOffsetY = height - defaultHeight;
         setY(totalOffsetY);
@@ -75,7 +91,7 @@ public class HrLayout extends LinearLayout {
         realMarginTop = height - realHeight;
         getLayoutParams().height = (int) realHeight;
         setLayoutParams(getLayoutParams());
-        Log.d(TAG, "测量高度：" + height + "   defaultHeight：" + defaultHeight + "   realHeight：" + realHeight);
+        Log.d(TAG, "屏幕高：" + windowsHeight + "     测量高度：" + height + "   defaultHeight：" + defaultHeight + "   realHeight：" + realHeight);
     }
 
     @Override
@@ -100,12 +116,15 @@ public class HrLayout extends LinearLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "子view是否到达顶点" + canChildScrollUp());
+                Log.d(TAG, "子view是否可以向上滚动" + canChildScrollUp());
                 currY = ev.getRawY();
                 startY = currY;
-                Log.d(TAG, "totalOffsetY:" + totalOffsetY + "    realMarginTop:" + realMarginTop);
-                //如果偏移量已经到达拉伸目标值，则交给子view消费
+                Log.d(TAG, "startY:" + startY + "     totalOffsetY:" + totalOffsetY + "    realMarginTop:" + realMarginTop);
+//                //如果偏移量已经到达拉伸目标值，则交给子view消费
                 if (totalOffsetY <= realMarginTop) {
+                    if (!noHaveScroll) {
+                        return true;
+                    }
                     return false;
                 }
                 break;
@@ -114,10 +133,11 @@ public class HrLayout extends LinearLayout {
                 Log.d(TAG, "分发-移动");
                 float moveY = ev.getRawY();
                 moveState = moveY - startY;
+                Log.d(TAG, "动动动动动动动动  moveY:" + moveY + "      startY:" + startY);
                 if (moveState > 0) {
                     //下滑
                     Log.d(TAG, "分发-下滑");
-                    if (totalOffsetY <= realMarginTop && canChildScrollUp()) {
+                    if (totalOffsetY <= realMarginTop && !canChildScrollUp()) {
                         //外层的view到达顶点&&子view不在顶点，此处不拦截，交给子view
                         Log.d(TAG, "分发-下滑-不拦截");
                         return false;
@@ -131,6 +151,11 @@ public class HrLayout extends LinearLayout {
                         //只要偏移量到达预计值，就不拦截事件，直接分发到下级
                         return false;
                     }
+                } else if (moveState == 0) {
+                    Log.d(TAG, "分发-点击====00000000");
+                    return false;
+                } else {
+                    Log.d(TAG, "分发-else");
                 }
                 break;
 
@@ -151,8 +176,12 @@ public class HrLayout extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 currY = event.getRawY();
                 startY = currY;
-                Log.d(TAG, "currY:" + currY);
+                Log.d(TAG, "onTouchEvent===currY:" + currY + "     startY:" + startY);
                 if (totalOffsetY <= realMarginTop) {
+                    //内部没有滚动条，事件自己消费，不往下传递
+                    if (!noHaveScroll) {
+                        return true;
+                    }
                     return false;
                 }
                 break;
@@ -189,24 +218,61 @@ public class HrLayout extends LinearLayout {
     }
 
 
-    //判断子view是否滑动到顶部，这段代码是swiper里边的
+    //判断子view是否滑动到顶部
     public boolean canChildScrollUp() {
-        View childView = getChildAt(0);
-        Log.d(TAG, "子viewid：" + childView.getId());
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            if (childView instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) childView;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || childView.getTop() < absListView.getPaddingTop());
+        noHaveScroll = false;
+        for (int i = 0; i < getChildCount(); i++) {
+            View childView = getChildAt(i);
+            Log.d(TAG, "子viewid：" + childView.getId() + "   是否可见：" + (childView.getVisibility() == View.VISIBLE));
+            if (android.os.Build.VERSION.SDK_INT < 14) {
+                if (childView instanceof AbsListView) {
+                    final AbsListView absListView = (AbsListView) childView;
+                    noHaveScroll = true;
+                    return absListView.getChildCount() > 0
+                            && (absListView.getFirstVisiblePosition() > 0 || childView.getTop() < absListView.getPaddingTop());
+                } else {
+                    noHaveScroll = true;
+                    return ViewCompat.canScrollVertically(childView, -1) || childView.getScrollY() > 0;
+                }
             } else {
-                return ViewCompat.canScrollVertically(childView, -1) || childView.getScrollY() > 0;
+                if ((childView instanceof ScrollView && childView.getVisibility() == VISIBLE)) {
+                    noHaveScroll = true;
+                    ScrollView svView = (ScrollView) childView;
+                    if (svView.getScrollY() == 0) {
+                        return true;
+                    }
+                    return false;
+                }
+                if ((childView instanceof NestedScrollView && childView.getVisibility() == VISIBLE)) {
+                    noHaveScroll = true;
+                    NestedScrollView svView = (NestedScrollView) childView;
+                    if (svView.getScrollY() == 0) {
+                        return true;
+                    }
+                    return false;
+                }
+                if ((childView instanceof RecyclerView && childView.getVisibility() == VISIBLE)) {
+                    noHaveScroll = true;
+                    RecyclerView recyclerView = (RecyclerView) childView;
+                    if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+                        if (((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                if ((childView instanceof ListView && childView.getVisibility() == VISIBLE)) {
+                    noHaveScroll = true;
+                    ListView listView = (ListView) childView;
+                    View firstVisibleItemView = listView.getChildAt(0);
+                    if (firstVisibleItemView != null && firstVisibleItemView.getTop() == 0) {
+                        return true;
+                    }
+                    return false;
+                }
             }
-        } else {
-//            if (childView instanceof XRecyclerView) {
-//                return !((XRecyclerView) childView).isOnTop();
-//            }
-            return ViewCompat.canScrollVertically(childView, -1);
         }
+        return true;
     }
 
     //动画
@@ -226,5 +292,14 @@ public class HrLayout extends LinearLayout {
             }
         });
         anim.start();
+    }
+
+    /**
+     * 获取屏幕的高度
+     */
+    public static int getWindowsHeight(Activity activity) {
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return dm.heightPixels;
     }
 }

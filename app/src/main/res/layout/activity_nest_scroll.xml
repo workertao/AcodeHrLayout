@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Scrollview"
+        android:text="NestedScrollView"
         android:textSize="30sp"
         android:textStyle="bold" />
 
@@ -21,7 +21,7 @@
         app:defaultHeight="110dp"
         app:realHeight="440dp">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -121,7 +121,7 @@
                     android:gravity="center"
                     android:text="这是一个scrollview15" />
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
 
     </com.acode.hr.layout.HrLayout>
 
