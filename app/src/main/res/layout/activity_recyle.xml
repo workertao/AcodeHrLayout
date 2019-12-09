@@ -26,6 +26,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <TextView
+            android:text="张三东方季道撒"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </com.acode.hr.layout.HrLayout>
 
 </RelativeLayout>
