@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +21,7 @@ public class ListViewActivity extends AppCompatActivity {
         lv = findViewById(R.id.lv);
         lv.setAdapter(new MyAdapter());
     }
+
 
     public class MyAdapter extends BaseAdapter {
 
@@ -43,7 +42,9 @@ public class ListViewActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item, parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item, parent, false);
+            TextView tv11 = view.findViewById(R.id.tv11);
+            tv11.setText("ListView" + position);
             return view;
         }
     }
