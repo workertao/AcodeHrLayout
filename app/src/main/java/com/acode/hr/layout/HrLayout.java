@@ -26,6 +26,9 @@ public class HrLayout extends LinearLayout {
     //总共的偏移量，当为0时，说明没有偏移
     private float totalOffsetY = 0;
 
+    //滑动偏移量
+    private float slipOffsetY = 20;
+
     //默认露出多少高度
     private float defaultHeight;
 
@@ -132,7 +135,7 @@ public class HrLayout extends LinearLayout {
                 Log.d(TAG, "onInterceptTouchEvent-移动");
                 float moveY = ev.getRawY();
                 moveState = moveY - startY;
-                if (moveState > 0) {
+                if (moveState > slipOffsetY) {
                     //下滑
                     Log.d(TAG, "分发-下滑");
                     if (totalOffsetY <= realMarginTop && !canChildScrollUp()) {
@@ -142,7 +145,7 @@ public class HrLayout extends LinearLayout {
                     }
                     Log.d(TAG, "分发-下滑-拦截");
                     return true;
-                } else if (moveState < 0) {
+                } else if (moveState < -slipOffsetY) {
                     //上滑
                     Log.d(TAG, "分发-上滑");
                     if (totalOffsetY <= realMarginTop) {
@@ -201,16 +204,14 @@ public class HrLayout extends LinearLayout {
                 Log.d(TAG, "onTouchEvent-弹起:getY:" + getY());
                 currY = (int) event.getRawY();
                 Log.d(TAG, "currY:" + currY);
-                if (moveState > 0) {
+                if (moveState > slipOffsetY) {
                     //下滑
                     Log.d(TAG, "下滑");
                     startAnim(getY(), defaultMarginTop);
-                } else if (moveState < 0) {
+                } else if (moveState < -slipOffsetY) {
                     //上滑
                     Log.d(TAG, "上滑");
                     startAnim(getY(), realMarginTop);
-                } else {
-
                 }
                 moveState = 0;
                 break;
