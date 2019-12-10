@@ -15,7 +15,7 @@
     </com.acode.hr.layout.HrLayout>
 # 注意：
      1，HrLayout继承LinearLayout；
-     2，内部职能嵌套一个本身带有滚动事件的view；
+     2，内部只能嵌套一个本身带有滚动事件的view；
      3，写的比较仓促，没考虑太多情况，有啥问题可联系我；
 # 更新日志
     2019-12-10
