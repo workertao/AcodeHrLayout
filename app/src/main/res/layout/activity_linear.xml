@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".RecyleActivity">
 
     <TextView
@@ -18,18 +19,49 @@
         android:id="@+id/hrLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ff4400"
+        android:orientation="vertical"
         app:defaultHeight="180dp"
         app:realHeight="550dp">
 
-        <Button
-            android:id="@+id/btnTouchView"
+        <LinearLayout
+            android:id="@+id/llRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#fff"
-            android:gravity="center"
-            android:onClick="funClick"
-            android:text="点击弹起/关闭 " />
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:onClick="funStart"
+                    android:text="弹起" />
+
+                <Button
+                    android:id="@+id/btnClose"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:onClick="funClose"
+                    android:text="关闭 " />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnTouchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:gravity="center"
+                android:onClick="funClick"
+                android:text="点击弹起/关闭 " />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
