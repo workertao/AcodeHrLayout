@@ -47,6 +47,8 @@ public class HrLayout extends LinearLayout {
     //标识内部是否包含滚动条,默认没有
     private boolean noHaveScroll;
 
+    private View touchView;
+
     public HrLayout(Context context) {
         this(context, null);
     }
@@ -302,8 +304,6 @@ public class HrLayout extends LinearLayout {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
     }
-
-    private View touchView;
 
     public HrLayout setTouchView(View touchView) {
         this.touchView = touchView;

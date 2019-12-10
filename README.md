@@ -1,6 +1,6 @@
 # AcodeHrLayout
     android底部弹出抽屉布局,可以设置抽屉布局默认露出的高度，和预计到达的高度。
-    内部可以嵌套Recyleview,ListView,ScrlloView，NestScrollview和常用的5种布局，
+    内部可以嵌套Recyleview,ListView,ScrlloView，NestScrollview和常用的5种布局。
     无需关心事件分发，内部已经处理，使用方便！
 # APK体验（安装密码：666）
 ![安装密码：666](https://github.com/workertao/AcodeHrLayout/blob/master/img/code1.png)
@@ -16,17 +16,15 @@
 # 注意：
      1，HrLayout继承LinearLayout；
      2，内部只能嵌套一个本身带有滚动事件的view；
-     3，写的比较仓促，没考虑太多情况，有啥问题可联系我；
+     3，setTouchView(View view)方法内的view会自己消费touch事件；
+     4，写的比较仓促，没考虑太多情况，有啥问题可联系我；
 # 更新日志
-    2019-12-10
-     1，新增点击弹起关闭事件
-        //需要给hrLayout设置点击的view  
+     2019-12-10
+     1，新增自己消费touch事件的方法
         hrLayout.setTouchView(btnTouchView);
-        //获取是否在顶部，滚动到顶部/底部
-        if (!hrLayout.isTop()) {
-            hrLayout.toTop();
-        } else {
-            hrLayout.toBottom();
-        }
+     2，新增滚动到顶部方法   
+        hrLayout.toTop();
+     3，新增滚动到底部方法
+        hrLayout.toBottom();
 # 联系方式
-    QQ:1240490684
+     QQ:1240490684
