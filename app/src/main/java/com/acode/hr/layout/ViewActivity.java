@@ -17,14 +17,14 @@ public class ViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_linear);
         hrLayout = findViewById(R.id.hrLayout);
         btnTouchView = findViewById(R.id.btnTouchView);
-        hrLayout.setTouchView(btnTouchView);
+//        hrLayout.setTouchView(btnTouchView);
     }
 
     public void funClick(View view) {
-        if (!hrLayout.isTop()) {
-            hrLayout.toTop();
-        } else {
-            hrLayout.toBottom();
-        }
+//        if (!hrLayout.isTop()) {
+//            hrLayout.toTop();
+//        } else {
+//            hrLayout.toBottom();
+//        }
     }
 }

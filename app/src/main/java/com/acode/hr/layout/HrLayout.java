@@ -27,7 +27,7 @@ public class HrLayout extends LinearLayout {
     private float totalOffsetY = 0;
 
     //滑动偏移量
-    private float slipOffsetY = 20;
+    private float slipOffsetY = 0;
 
     //默认露出多少高度
     private float defaultHeight;
@@ -187,7 +187,7 @@ public class HrLayout extends LinearLayout {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                int moveY = (int) event.getRawY();
+                float moveY = event.getRawY();
                 //计算偏移量，得到正负值，-上 +下
                 moveState = moveY - startY;
                 totalOffsetY = moveY - currY + totalOffsetY;
@@ -202,7 +202,7 @@ public class HrLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 Log.d(TAG, "onTouchEvent-弹起:getY:" + getY());
-                currY = (int) event.getRawY();
+                currY = event.getRawY();
                 Log.d(TAG, "currY:" + currY);
                 if (moveState > slipOffsetY) {
                     //下滑
