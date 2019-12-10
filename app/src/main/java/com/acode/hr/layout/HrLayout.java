@@ -112,10 +112,13 @@ public class HrLayout extends LinearLayout {
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "子view是否可以向上滚动" + canChildScrollUp());
+                Log.d(TAG, "onInterceptTouchEvent-按下:子view是否可以向上滚动" + canChildScrollUp());
                 currY = ev.getRawY();
                 startY = currY;
-                Log.d(TAG, "startY:" + startY + "     totalOffsetY:" + totalOffsetY + "    realMarginTop:" + realMarginTop);
+                Log.d(TAG, "onInterceptTouchEvent-按下:startY:" + startY + "     totalOffsetY:" + totalOffsetY + "    realMarginTop:" + realMarginTop);
+                if (touchView != null && ev.getY() > touchView.getTop() && ev.getY() < touchView.getBottom()) {
+                    return false;
+                }
 //                //如果偏移量已经到达拉伸目标值，则交给子view消费
                 if (totalOffsetY <= realMarginTop) {
                     if (!noHaveScroll) {
@@ -126,10 +129,9 @@ public class HrLayout extends LinearLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 //如果偏移量已经到达拉伸目标值，则交给子view消费
-                Log.d(TAG, "分发-移动");
+                Log.d(TAG, "onInterceptTouchEvent-移动");
                 float moveY = ev.getRawY();
                 moveState = moveY - startY;
-                Log.d(TAG, "动动动动动动动动  moveY:" + moveY + "      startY:" + startY);
                 if (moveState > 0) {
                     //下滑
                     Log.d(TAG, "分发-下滑");
@@ -156,7 +158,7 @@ public class HrLayout extends LinearLayout {
                 break;
 
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "onInterceptTouchEvent-ACTION_UP:");
+                Log.d(TAG, "onInterceptTouchEvent-弹起");
                 //如果UP的Y跟currentY一样  则分发到下级，说明是点击
                 if (ev.getRawY() == currY) {
                     return false;
@@ -172,7 +174,7 @@ public class HrLayout extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 currY = event.getRawY();
                 startY = currY;
-                Log.d(TAG, "onTouchEvent===currY:" + currY + "     startY:" + startY);
+                Log.d(TAG, "onTouchEvent-按下:" + currY + "     startY:" + startY);
                 if (totalOffsetY <= realMarginTop) {
                     //内部没有滚动条，事件自己消费，不往下传递
                     if (!noHaveScroll) {
@@ -193,10 +195,10 @@ public class HrLayout extends LinearLayout {
                 }
                 currY = moveY;
                 setTranslationY(totalOffsetY);
-                Log.d(TAG, "moveY:" + moveY + "    currY:" + currY + "   偏移量：" + totalOffsetY + "  滑动状态：" + moveState);
+                Log.d(TAG, "onTouchEvent-移动:" + moveY + "    currY:" + currY + "   偏移量：" + totalOffsetY + "  滑动状态：" + moveState);
                 break;
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "   getY:" + getY());
+                Log.d(TAG, "onTouchEvent-弹起:getY:" + getY());
                 currY = (int) event.getRawY();
                 Log.d(TAG, "currY:" + currY);
                 if (moveState > 0) {
@@ -207,7 +209,10 @@ public class HrLayout extends LinearLayout {
                     //上滑
                     Log.d(TAG, "上滑");
                     startAnim(getY(), realMarginTop);
+                } else {
+
                 }
+                moveState = 0;
                 break;
         }
         return true;
@@ -290,12 +295,32 @@ public class HrLayout extends LinearLayout {
         anim.start();
     }
 
-    /**
-     * 获取屏幕的高度
-     */
+    //获取屏幕的高度
     public static int getWindowsHeight(Activity activity) {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
+    }
+
+    private View touchView;
+
+    public HrLayout setTouchView(View touchView) {
+        this.touchView = touchView;
+        return this;
+    }
+
+    //弹起
+    public void toTop() {
+        startAnim(defaultMarginTop, realMarginTop);
+    }
+
+    //关闭
+    public void toBottom() {
+        startAnim(realMarginTop, defaultMarginTop);
+    }
+
+    //是否弹起
+    public boolean isTop() {
+        return totalOffsetY <= realMarginTop;
     }
 }

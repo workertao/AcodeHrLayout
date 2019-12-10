@@ -15,19 +15,25 @@
         android:textStyle="bold" />
 
     <com.acode.hr.layout.HrLayout
+        android:id="@+id/hrLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ff4400"
+        android:orientation="vertical"
         app:defaultHeight="110dp"
         app:realHeight="440dp">
 
+        <TextView
+            android:id="@+id/tvTouchView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:background="#fff"
+            android:onClick="funClick"
+            android:text="点击弹起/关闭" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <TextView
-            android:text="张三东方季道撒"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

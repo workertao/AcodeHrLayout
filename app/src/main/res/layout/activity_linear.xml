@@ -15,16 +15,29 @@
         android:textStyle="bold" />
 
     <com.acode.hr.layout.HrLayout
+        android:id="@+id/hrLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ff4400"
-        app:defaultHeight="110dp"
-        app:realHeight="440dp">
+        app:defaultHeight="180dp"
+        app:realHeight="550dp">
+
+        <Button
+            android:id="@+id/btnTouchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:gravity="center"
+            android:onClick="funClick"
+            android:text="点击弹起/关闭 " />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ff4400" />
+            android:background="#ff4400"
+            android:orientation="vertical">
+
+        </LinearLayout>
     </com.acode.hr.layout.HrLayout>
 
 </RelativeLayout>

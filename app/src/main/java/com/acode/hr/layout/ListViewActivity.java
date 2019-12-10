@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,12 @@ public class ListViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_listview);
         lv = findViewById(R.id.lv);
         lv.setAdapter(new MyAdapter());
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(ListViewActivity.this, "点击了" + position, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
