@@ -19,8 +19,14 @@
      3，写的比较仓促，没考虑太多情况，有啥问题可联系我；
 # 更新日志
     2019-12-10
-    1，新增点击弹起关闭事件
-       需要给hrLayout设置点击的view  
-       hrLayout.setTouchView(btnTouchView);   
+     1，新增点击弹起关闭事件
+        //需要给hrLayout设置点击的view  
+        hrLayout.setTouchView(btnTouchView);
+        //获取是否在顶部，滚动到顶部/底部
+        if (!hrLayout.isTop()) {
+            hrLayout.toTop();
+        } else {
+            hrLayout.toBottom();
+        }
 # 联系方式
     QQ:1240490684
