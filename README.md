@@ -17,9 +17,10 @@
      1，HrLayout继承LinearLayout；
      2，内部只能嵌套一个本身带有滚动事件的view；
      3，新增addTouchView(View view)方法内的view会自己消费touch事件；
-     4，新增addHeaderView(View view)方法内的view会自己消费touch事件;因为headerView不属于HrLayout,所以也不响应HrLayout的touch事件，他跟随滑动只是左边的变化。
-     4，新增addTitleView(View... view)方法内的view数组会自己消费touch事件;因为titleView不属于HrLayout,所以也不响应HrLayout的touch事件，他跟随滑动只是左边的变化。
-     4，写的比较仓促，没考虑太多情况，有啥问题可联系我；
+     4，新增addHeaderView(View view)方法内的view会自己消费touch事件;因为headerView不属于HrLayout,所以也不响应HrLayout的touch事件，他跟随滑动只是左边的变化；
+     5，新增addTitleView(View... view)方法内的view数组会自己消费touch事件;因为titleView不属于HrLayout,所以也不响应HrLayout的touch事件，他跟随滑动只是左边的变化；
+     6，titleView可以是多个，但这多个view必须与HrLayout平级；
+     7，写的比较仓促，没考虑太多情况，有啥问题可联系我；
 # 更新日志
      2019-12-10
      1，新增自己消费touch事件的方法
