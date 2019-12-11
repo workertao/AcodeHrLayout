@@ -4,14 +4,18 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import androidx.core.view.ViewCompat;
@@ -48,6 +52,10 @@ public class HrLayout extends LinearLayout {
     private boolean noHaveScroll;
 
     private View touchView;
+
+    private View headerView;
+
+    private View[] titleViews;
 
     public HrLayout(Context context) {
         this(context, null);
@@ -92,6 +100,25 @@ public class HrLayout extends LinearLayout {
         realMarginTop = height - realHeight;
         getLayoutParams().height = (int) realHeight;
         setLayoutParams(getLayoutParams());
+        //新增headerview
+        if (headerView != null) {
+            if (headerView.getParent() == null) {
+                RelativeLayout parent = (RelativeLayout) getParent();
+                parent.addView(headerView);
+            }
+            headerView.setY(totalOffsetY - headerView.getMeasuredHeight());
+        }
+        //新增titleView
+        if (titleViews != null) {
+            for (View titleView : titleViews) {
+                //这里要判断有没有headerview，如果有，需要减去headerview的高度
+                if (headerView != null) {
+                    titleView.setY(totalOffsetY - titleView.getMeasuredHeight() - headerView.getMeasuredHeight());
+                } else {
+                    titleView.setY(totalOffsetY - titleView.getMeasuredHeight());
+                }
+            }
+        }
         Log.d(TAG, "屏幕高：" + windowsHeight + "     测量高度：" + height + "   defaultHeight：" + defaultHeight + "   realHeight：" + realHeight);
     }
 
@@ -200,6 +227,18 @@ public class HrLayout extends LinearLayout {
                 }
                 currY = moveY;
                 setTranslationY(totalOffsetY);
+                if (headerView != null) {
+                    headerView.setTranslationY(totalOffsetY - headerView.getMeasuredHeight());
+                }
+                if (titleViews != null) {
+                    for (View titleView : titleViews) {
+                        if (headerView != null) {
+                            titleView.setTranslationY(totalOffsetY - titleView.getMeasuredHeight() - headerView.getMeasuredHeight());
+                        } else {
+                            titleView.setTranslationY(totalOffsetY - titleView.getMeasuredHeight());
+                        }
+                    }
+                }
                 Log.d(TAG, "onTouchEvent-移动:" + moveY + "    currY:" + currY + "   偏移量：" + totalOffsetY + "  滑动状态：" + moveState);
                 break;
             case MotionEvent.ACTION_UP:
@@ -291,6 +330,19 @@ public class HrLayout extends LinearLayout {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float currentValue = (float) animation.getAnimatedValue();
                 setTranslationY(currentValue);
+                if (headerView != null) {
+                    headerView.setTranslationY(currentValue - headerView.getMeasuredHeight());
+                }
+                if (titleViews != null) {
+                    for (View titleView : titleViews) {
+                        if (headerView != null) {
+                            //这里是currentValue
+                            titleView.setTranslationY(currentValue - titleView.getMeasuredHeight() - headerView.getMeasuredHeight());
+                        } else {
+                            titleView.setTranslationY(currentValue - titleView.getMeasuredHeight());
+                        }
+                    }
+                }
                 totalOffsetY = endHeight;
                 Log.d(TAG, "动画：" + totalOffsetY);
             }
@@ -303,11 +355,6 @@ public class HrLayout extends LinearLayout {
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
-    }
-
-    public HrLayout setTouchView(View touchView) {
-        this.touchView = touchView;
-        return this;
     }
 
     //弹起
@@ -323,5 +370,21 @@ public class HrLayout extends LinearLayout {
     //是否弹起
     public boolean isTop() {
         return totalOffsetY <= realMarginTop;
+    }
+
+    //headerview只能添加一个，headerview将自己消费touch事件
+    public void addHeaderView(View view) {
+        this.headerView = view;
+    }
+
+    //titleview可以添加多个，必须是在activity布局内声明的view，且不在hrlayout内部，titleview将自己消费touch事件
+    public void addTitleView(View... views) {
+        this.titleViews = views;
+    }
+
+    //touchView只能添加一个，必须是在activity布局内声明的view，且必须在hrlayout内部，touchview内部的子view将自己消费touch事件
+    public HrLayout addTouchView(View touchView) {
+        this.touchView = touchView;
+        return this;
     }
 }

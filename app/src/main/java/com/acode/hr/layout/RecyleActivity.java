@@ -37,7 +37,7 @@ public class RecyleActivity extends AppCompatActivity {
         rv.setLayoutManager(linearLayoutManager);
         myAdapter = new MyAdapter();
         rv.setAdapter(myAdapter);
-        hrLayout.setTouchView(tvTouchView);
+        hrLayout.addTouchView(tvTouchView);
     }
 
     public class MyAdapter extends RecyclerView.Adapter {

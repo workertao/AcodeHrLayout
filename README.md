@@ -26,5 +26,22 @@
         hrLayout.toTop();
      3，新增滚动到底部方法
         hrLayout.toBottom();
+        
+     2019-12-11
+      //headerview只能添加一个，headerview将自己消费touch事件
+      public void addHeaderView(View view) {
+          this.headerView = view;
+      }
+     
+      //titleview可以添加多个，必须是在activity布局内声明的view，且不在hrlayout内部，titleview将自己消费touch事件
+      public void addTitleView(View... views) {
+          this.titleViews = views;
+      }
+     
+      //touchView只能添加一个，必须是在activity布局内声明的view，且必须在hrlayout内部，touchview内部的子view将自己消费touch事件
+      public HrLayout addTouchView(View touchView) {
+          this.touchView = touchView;
+          return this;
+      }
 # 联系方式
      QQ:1240490684
