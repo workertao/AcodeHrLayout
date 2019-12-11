@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +16,7 @@ public class ViewActivity extends AppCompatActivity {
     private LinearLayout llRoot;
     private Button btnLeft;
     private Button btnRight;
+    private TextView tv11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +27,16 @@ public class ViewActivity extends AppCompatActivity {
         btnLeft = findViewById(R.id.btnLeft);
         btnRight = findViewById(R.id.btnRight);
         View header1 = View.inflate(this, R.layout.adapter_item, null);
+        tv11 = header1.findViewById(R.id.tv11);
         hrLayout.addTouchView(llRoot);
         hrLayout.addHeaderView(header1);
         hrLayout.addTitleView(btnLeft, btnRight);
+        tv11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ViewActivity.this, "点击了headerview", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void funClick(View view) {
