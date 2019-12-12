@@ -14,7 +14,7 @@
         自己的布局
     </com.acode.hr.layout.HrLayout>
     
-    如果需要动态设置高度可以使用一下代码
+    如果需要动态设置高度可以使用以下代码
     //设置默认露出的高度，参数单位是px
     setDefaultHeight(float defaultHeight)；
     //设置最终露出的高度，参数单位是px
