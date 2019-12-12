@@ -128,13 +128,13 @@ public class HrLayout extends LinearLayout {
         Log.d(TAG, "高度：" + h);
     }
 
-    //设置默认露出的高度
+    //设置默认露出的高度，参数单位px
     public HrLayout setDefaultHeight(float defaultHeight) {
         this.defaultHeight = defaultHeight;
         return this;
     }
 
-    //设置预计露出的高度
+    //设置预计露出的高度，参数单位px
     public HrLayout setRealHeight(float realHeight) {
         this.realHeight = realHeight;
         return this;

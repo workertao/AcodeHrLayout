@@ -13,6 +13,12 @@
         app:realHeight="440dp">
         自己的布局
     </com.acode.hr.layout.HrLayout>
+    
+    如果需要动态设置高度可以使用一下代码
+    //设置默认露出的高度，参数单位是px
+    setDefaultHeight(float defaultHeight)；
+    //设置最终露出的高度，参数单位是px
+    setRealHeight(float defaultHeight)；
 # 注意：
      1，HrLayout继承LinearLayout；
      2，内部只能嵌套一个本身带有滚动事件的view；
