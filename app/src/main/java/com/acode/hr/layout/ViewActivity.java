@@ -1,6 +1,7 @@
 package com.acode.hr.layout;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -35,6 +36,16 @@ public class ViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ViewActivity.this, "点击了headerview", Toast.LENGTH_SHORT).show();
+            }
+        });
+        hrLayout.setOnScrollStateListener(new HrLayout.OnScrollStateListener() {
+            @Override
+            public void onState(int state) {
+                if (state > 0) {
+                    Log.d("HRLAYOUT", "顶部");
+                } else {
+                    Log.d("HRLAYOUT", "底部");
+                }
             }
         });
     }

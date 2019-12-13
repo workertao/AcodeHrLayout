@@ -57,6 +57,8 @@ public class HrLayout extends LinearLayout {
 
     private View[] titleViews;
 
+    private OnScrollStateListener onScrollStateListener;
+
     public HrLayout(Context context) {
         this(context, null);
     }
@@ -119,6 +121,15 @@ public class HrLayout extends LinearLayout {
                 }
             }
         }
+//        if (onScrollStateListener != null) {
+//            if (totalOffsetY == realMarginTop) {
+//                onScrollStateListener.onState(1);
+//            }
+//            if (totalOffsetY == defaultMarginTop) {
+//                onScrollStateListener.onState(-1);
+//            }
+//            Log.d("上滑还是下滑","测量");
+//        }
         Log.d(TAG, "屏幕高：" + windowsHeight + "     测量高度：" + height + "   defaultHeight：" + defaultHeight + "   realHeight：" + realHeight);
     }
 
@@ -220,6 +231,15 @@ public class HrLayout extends LinearLayout {
                 //计算偏移量，得到正负值，-上 +下
                 moveState = moveY - startY;
                 totalOffsetY = moveY - currY + totalOffsetY;
+//                if (onScrollStateListener != null) {
+//                    if (totalOffsetY == realMarginTop) {
+//                        onScrollStateListener.onState(1);
+//                    }
+//                    if (totalOffsetY == defaultMarginTop) {
+//                        onScrollStateListener.onState(-1);
+//                    }
+//                    Log.d("上滑还是下滑","移动");
+//                }
                 if (totalOffsetY <= realMarginTop && moveState < 0) {
                     //偏移量到达预计值&&是上滑状态，直接breank
                     totalOffsetY = realMarginTop;
@@ -329,6 +349,9 @@ public class HrLayout extends LinearLayout {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float currentValue = (float) animation.getAnimatedValue();
+                if (totalOffsetY == endHeight) {
+                    return;
+                }
                 setTranslationY(currentValue);
                 if (headerView != null) {
                     headerView.setTranslationY(currentValue - headerView.getMeasuredHeight());
@@ -343,9 +366,18 @@ public class HrLayout extends LinearLayout {
                         }
                     }
                 }
-                totalOffsetY = endHeight;
-                Log.d(TAG, "动画：" + totalOffsetY);
+                totalOffsetY = currentValue;
+                Log.d(TAG, "totalOffsetY:" + totalOffsetY + "   realMarginTop:" + realMarginTop + "    defaultMarginTop: " + defaultMarginTop);
+                if (onScrollStateListener != null) {
+                    if (totalOffsetY == realMarginTop) {
+                        onScrollStateListener.onState(1);
+                    }
+                    if (totalOffsetY == defaultMarginTop) {
+                        onScrollStateListener.onState(-1);
+                    }
+                }
             }
+
         });
         anim.start();
     }
@@ -386,5 +418,18 @@ public class HrLayout extends LinearLayout {
     public HrLayout addTouchView(View touchView) {
         this.touchView = touchView;
         return this;
+    }
+
+    public HrLayout setOnScrollStateListener(OnScrollStateListener onScrollStateListener) {
+        this.onScrollStateListener = onScrollStateListener;
+        return this;
+    }
+
+    public interface OnScrollStateListener {
+
+        /**
+         * @param state>0 顶部  state<0底部
+         */
+        void onState(int state);
     }
 }

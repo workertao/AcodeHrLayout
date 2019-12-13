@@ -54,5 +54,14 @@
           this.touchView = touchView;
           return this;
       }
+      
+      2019-12-12
+       public interface OnScrollStateListener {
+     
+          /**
+            * @param state>0 顶部  state<0底部
+            */
+          void onState(int state);
+       }
 # 联系方式
      QQ:1240490684
