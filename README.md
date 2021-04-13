@@ -1,3 +1,4 @@
+# 作者跑路，停止维护
 # AcodeHrLayout
     android底部弹出抽屉布局,可以设置抽屉布局默认露出的高度，和预计到达的高度，还可增加headerview，titleview。
     内部可以嵌套Recyleview,ListView,ScrlloView，NestScrollview和常用的5种布局。
@@ -63,5 +64,3 @@
             */
           void onState(int state);
        }
-# 联系方式
-     QQ:1240490684
